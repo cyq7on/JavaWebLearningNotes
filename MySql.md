@@ -1,4 +1,4 @@
-#一、sql概述
+﻿#一、sql概述
 sql：Structure Query Language，结构化查询语言
 #二、sql分类
 ##1、DDL
@@ -74,3 +74,6 @@ TRUNCATE：
     把表直接DROP掉，然后再创建一个同样的新表  
     删除的数据不能找回  
     执行速度比DELETE快  
+##3、DQL  
+
+DQL，即Data Query Language，数据操作语言，用来查询记录（数据）。
