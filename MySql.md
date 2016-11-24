@@ -17,7 +17,7 @@ use mydb
 select database()
 ```
 ###操作数据表：
-常用数据类型：  
+MySQL常用数据类型：  
       int：整型  
       double：浮点型，例如double(5,2)表示最多5位，其中必须有2位小数，即最大值为999.99  
 			char：固定长度字符串类型； char(10)  'abc'  
