@@ -60,14 +60,15 @@ INSERT INTO USER VALUES
 (2,'周杰伦2','m','1978-5-12','2016-11-22','actor','100000.00','Music King'),
 (3,'周杰伦3','m','1978-5-12','2016-11-22','actor','100000.00','Music King')
 update user set job='actor&singer'
-update user set job='singer'where id=2
+update user set job='singer' where id=2
 update user set Salary=Salary * 9 where id=3
 delete from user where username='周杰伦'
 delete from user
 truncate table user
 ```
 DELETE：  
-    删除表中的数据，表结构还在;删除后的数据可以找回  
+    删除表中的数据，表结构还在  
+    删除后的数据可以找回  
 
 TRUNCATE：  
     把表直接DROP掉，然后再创建一个同样的新表  
