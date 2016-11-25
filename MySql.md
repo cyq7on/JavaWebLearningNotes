@@ -77,10 +77,10 @@ TRUNCATE：
 **Attention：以上的sql语句句末都没有分号，单句执行没有问题，但是想要多句一起执行就血崩了，所以，以后还是都加上分号。**
 ##3、DQL  
 
-DQL，即Data Query Language，数据操作语言，用来查询记录（数据）。查询返回的结果集是一张虚拟表，对数据库本身没有影响。
+DQL，即Data Query Language，数据操作语言，用来查询记录（数据）。查询返回的结果集是一张虚拟表，对数据库本身没有影响。  
 关键字：SELECT  
 语法：  
-SELECT 列名 FROM表名【WHERE --> GROUP BY -->HAVING--> ORDER BY】
+SELECT 列名 FROM表名【WHERE --> GROUP BY -->HAVING--> ORDER BY】  
 SELECT selection_list /*要查询的列名称*/  
 FROM table_list /*要查询的表名称*/  
 WHERE condition /*行条件*/  
