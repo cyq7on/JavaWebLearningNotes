@@ -187,3 +187,44 @@ UPDATE stu SET height=178 WHERE height IS NULL;
 SELECT * FROM stu ORDER BY age;
 SELECT * FROM stu ORDER BY age,height DESC;
 ```
+###3.6、聚合函数
+聚合函数是用来做纵向运算的函数：
+
+ - COUNT()：统计指定列不为NULL的记录行数
+ - MAX()：计算指定列的最大值，如果指定列是字符串类型，那么使用字符串排序运算
+ - MIN()：计算指定列的最小值，如果指定列是字符串类型，那么使用字符串排序运算；
+ - SUM()：计算指定列的数值和，如果指定列类型不是数值类型，那么计算结果为0；
+ - AVG()：计算指定列的平均值，如果指定列类型不是数值类型，那么计算结果为0；
+
+```sql
+select count(*) from stu;
+/*查询有年龄的，即age不为null*/
+select count(age) from stu;
+select count(*) from stu where age>50;
+select count(*) from stu where ifnull(age,0)+ifnull(height,0)>250;
+select sum(height),sum(age),sum(gender),avg(age) from stu;
+select max(age),min(height) from stu;
+```
+###3.7、分组查询
+使用关键字group by  
+
+```sql
+select gender,avg(age) from stu group by gender;
+select gender,avg(age) from stu where gender is not null group by gender;
+select gender,avg(age) from stu where gender is not null group by gender having avg(age)>50;
+```
+**having与where的区别:**
+
+ - having是在分组后对数据进行过滤，where是在分组前对数据进行过滤
+ - having后面可以使用聚合函数(统计函数)，where后面不可以使用聚合函数
+ - where是对分组前记录的条件，如果某行记录没有满足where子句的条件，那么这行记录不会参加分组；而having是对分组后数据的约束
+###3.8、limit
+
+```sql
+/*查询m行记录，起始行从n开始*/
+select * from stu limit n,m;
+```
+
+ - 查询语句书写顺序：select – from- where- group by- having- order by-limit
+ - 查询语句执行顺序：from - where -group by - having - select - order by-limit	
+	

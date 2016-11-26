@@ -71,3 +71,14 @@ UPDATE stu SET height=178 WHERE height IS NULL;
 /*以上对数据进行改造以便测试*/
 SELECT * FROM stu ORDER BY age;
 SELECT * FROM stu ORDER BY age,height DESC;
+
+SELECT COUNT(age) FROM stu;
+SELECT COUNT(*) FROM stu WHERE age>50;
+SELECT COUNT(*) FROM stu WHERE IFNULL(age,0)+IFNULL(height,0)>250;
+INSERT INTO stu VALUES('S_1012', 'test', 23, NULL,NULL);
+SELECT SUM(height),SUM(age),SUM(gender),AVG(age) FROM stu;
+SELECT MAX(age),MIN(height) FROM stu;
+SELECT gender,AVG(age) FROM stu GROUP BY gender;
+SELECT gender,AVG(age) FROM stu WHERE gender IS NOT NULL GROUP BY gender;
+SELECT gender,AVG(age) FROM stu WHERE gender IS NOT NULL GROUP BY gender HAVING AVG(age)>50;
+SELECT * FROM stu LIMIT 1,3;
