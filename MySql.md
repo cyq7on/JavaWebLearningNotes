@@ -237,6 +237,7 @@ select * from stu limit n,m;
  - 主键约束（primary key）
  - 唯一约束（unique）
  - 自动增长列（auto_increment）
+ 
 ###1.1、主键约束
 每个表中都要有一个主键，数据唯一，不能为null。  
 添加方式如下：  
