@@ -218,6 +218,7 @@ select gender,avg(age) from stu where gender is not null group by gender having 
  - having是在分组后对数据进行过滤，where是在分组前对数据进行过滤
  - having后面可以使用聚合函数(统计函数)，where后面不可以使用聚合函数
  - where是对分组前记录的条件，如果某行记录没有满足where子句的条件，那么这行记录不会参加分组；而having是对分组后数据的约束  
+
 ###3.8、limit
 
 ```sql
