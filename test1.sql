@@ -82,3 +82,62 @@ SELECT gender,AVG(age) FROM stu GROUP BY gender;
 SELECT gender,AVG(age) FROM stu WHERE gender IS NOT NULL GROUP BY gender;
 SELECT gender,AVG(age) FROM stu WHERE gender IS NOT NULL GROUP BY gender HAVING AVG(age)>50;
 SELECT * FROM stu LIMIT 1,3;
+
+CREATE TABLE student(
+id INT PRIMARY KEY,
+NAME VARCHAR(50)
+);
+DROP TABLE student;
+CREATE TABLE student(
+id INT,
+NAME VARCHAR(50),
+PRIMARY KEY(id)
+);
+CREATE TABLE student(
+stuid INT,
+classid INT,
+NAME VARCHAR(50),
+PRIMARY KEY(stuid,classid)
+);
+CREATE TABLE student(
+id INT,
+NAME VARCHAR(50)
+);
+ALTER TABLE student ADD PRIMARY KEY(id);
+ALTER TABLE student ADD CONSTRAINT pk_stu_id PRIMARY KEY(id);
+ALTER TABLE student DROP PRIMARY KEY;
+CREATE TABLE student(
+id INT PRIMARY KEY,
+NAME VARCHAR(50) NOT NULL,
+sex VARCHAR(10) DEFAULT '女'
+);
+INSERT INTO student VALUES(1,'张小凡','男');
+INSERT INTO student VALUES(2,'碧瑶',DEFAULT);
+INSERT INTO student(id,NAME) VALUES(3,'陆师姐');
+SELECT * FROM student;
+CREATE TABLE score(
+scoreid INT,
+score DOUBLE,
+stuid INT,
+CONSTRAINT fk_student_score_stuid FOREIGN KEY(stuid) REFERENCES student(id)
+)
+ALTER TABLE score DROP FOREIGN KEY fk_student_score_stuid;
+SELECT * FROM score;
+DROP TABLE score;
+CREATE TABLE score(
+scoreid INT,
+scorename VARCHAR(50),
+score DOUBLE,
+stuid INT,
+CONSTRAINT fk_student_score_stuid FOREIGN KEY(stuid) REFERENCES student(id)
+)
+INSERT INTO score VALUES(1,'java',99,1),
+                        (2,'java',90,2),
+                        (3,'java',92,3),
+                        (4,'mysql',95,1);
+SELECT * FROM student,score;
+SELECT * FROM student stu,score sco WHERE stu.id=sco.stuid;
+SELECT * FROM student stu JOIN score sco ON stu.id=sco.stuid; 
+INSERT INTO student VALUES(4,'花千骨',DEFAULT);
+SELECT * FROM student stu LEFT JOIN score sco ON stu.id=sco.stuid;
+SELECT * FROM student stu RIGHT JOIN score sco ON stu.id=sco.stuid;

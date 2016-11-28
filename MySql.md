@@ -144,13 +144,13 @@ select * from stu where sname like '_h';
 ```
 
 ###3.4、字段控制查询
-**去重查询**
+**去重查询**  
 使用关键字distinct。
 
 ```sql
 select distinct gender from stu;
 ```
-**数值类型做四则运算**
+**数值类型做四则运算**  
 增加一列数值以便测试：
 
 ```sql
@@ -228,3 +228,185 @@ select * from stu limit n,m;
  - 查询语句书写顺序：select – from- where- group by- having- order by-limit
  - 查询语句执行顺序：from - where -group by - having - select - order by-limit	
 	
+#三、数据完整性
+##1、实体完整性
+实体：表中的一行，或者说一条记录。  
+作用：标识每一行数据不重复。
+约束类型：
+
+ - 主键约束（primary key）
+ - 唯一约束（unique）
+ - 自动增长列（auto_increment）
+###1.1、主键约束
+每个表中都要有一个主键，数据唯一，不能为null。  
+添加方式如下：  
+
+```sql
+create table student(
+id int primary key,
+name varchar(50)
+);
+/*此方式可以创立联合主键*/
+create table student(
+id int,
+name varchar(50),
+primary key(id)
+);
+create table student(
+stuid int,
+classid int,
+name varchar(50),
+primary key(stuid,classid)
+);
+create table student(
+id int,
+name varchar(50)
+);
+alter table student add primary key(id);
+alter table student add constraint pk_stu_id primary key(id);
+/*删除主键约束*/
+alter table student drop primary key;
+```
+###1.2、唯一约束
+特点：数据不能重复。  
+
+```sql
+create table student(
+id int primary key,
+name varchar(50),
+tag varchar(50) unique
+);
+```
+###1.3、自动增长列
+并不是只能用于主键，但该列只能是整数类型  
+其他数据库关键字：
+
+ - sqlserver：identity
+ - oracle：sequence
+ 
+
+```sql
+create table student (
+id int primary key auto_increment,
+name varchar(50)
+)
+insert into student(name) values('Jay');
+```
+##2、域完整性
+作用：限制此单元格的数据正确，域代表当前单元格。  
+域完整性约束：
+
+ - 数据类型约束
+ - 非空约束（not null）
+ - 默认值约束（default）
+ - check约束，check（sex='男' or sex='女'），MySQL不支持
+ 
+
+```sql
+create table student(
+id int primary key,
+name varchar(50) not null,
+sex varchar(10) default '女'
+);
+insert into student values(1,'张小凡','男');
+insert into student values(2,'碧瑶',default);
+insert into student(id,name) values(3,'陆师姐');
+```
+##3、引用完整性
+外键约束：foreign key  
+```sql
+create table student(
+id int primary key,
+name varchar(50) not null,
+sex varchar(10) default '女'
+);
+create table score(
+scoreid int,
+score double,
+stuid int,
+constraint fk_student_score_stuid foreign key(stuid) references student(id)
+);
+/*另一种方式*/
+alter table score add constraint fk_student_score_stuid foreign key(stuid) references student(id);
+/*删除外键约束*/
+alter table score drop foreign key fk_student_score_stuid;
+```
+##4、表与表之间的关系
+
+ - 一对一，比如人和身份证
+ - 一对多（多对一），比如学生和考试
+ - 多对多，比如老师和学生
+ 
+ ![关系](http://img.blog.csdn.net/20161128160253420)
+#四、多表查询
+种类：
+
+ - 合并结果集：union、union all
+ - 连接查询
+ - 内连接：[inner] join on
+    -  外连接：outer join on
+          - 左外连接：left [outer] join
+          - 右外连接：right [outer] join
+          - 全连接：full join（MySQL不支持）
+ - 子查询 
+##1、合并结果集
+作用：把两个select语句的查询结果合并到一起。  
+方式：
+
+ - union：去除重复记录
+ - union all：不去除重复记录
+ 
+要求：被合并的两个结果，列数、列类型必须相同。
+```sql
+select * from t1 union select * from t2;
+select * from t1 union all select * from t2;
+```
+![union](http://img.blog.csdn.net/20161128162108100)
+![union all](http://img.blog.csdn.net/20161128162050735)
+##2、连接查询
+连接查询就是求出多个表的乘积，例如t1连接t2，那么查询出的结果就是t1*t2。
+![连接查询](http://img.blog.csdn.net/20161128162521299)
+显然，一般情况下这都不是我们想要的结果，所以，要使用主外键关系来去除无用信息。  
+
+```sql
+drop table score;
+CREATE TABLE score(
+scoreid INT,
+scorename varchar(50),
+score DOUBLE,
+stuid INT,
+CONSTRAINT fk_student_score_stuid FOREIGN KEY(stuid) REFERENCES student(id)
+)
+insert into score values(1,'java',99,1),
+                        (2,'java',90,2),
+                        (3,'java',92,3),
+                        (4,'mysql',95,1);
+SELECT * FROM student,score;
+SELECT * FROM student stu,score sco WHERE stu.id=sco.stuid;
+```
+###2.1、内连接
+上述的语句就是内连接，但不是sql中标准的查询方式，标准的内连接如下：
+
+```sql
+select * from student stu join score sco on stu.id=sco.stuid; 
+```
+再向student表中插入一条数据：
+
+```sql
+insert into student values(4,'花千骨',default);
+```
+但是score表里没有花千骨的记录，也就是说她缺考了，此时使用内连接就只能查出参加了考试的学生。想要查出所有学生，那么就得使用外连接。  
+###2.2、外连接
+特点：查询出的结果存在不满足条件的情况。  
+
+ - 左连接：先查询出左表（即以左表为主），然后查询右表，右表中满足条件的显示出来，不满足条件的显示NULL
+ - 右连接：先把右表中所有记录都查询出来，然后左表满足条件的显示，不满足显示NULL
+
+```sql
+select * from student stu left join score sco on stu.id=sco.stuid;
+```
+![左连接](http://img.blog.csdn.net/20161128165710412)
+```sql
+select * from student stu right join score sco on stu.id=sco.stuid;
+```
+![右连接](http://img.blog.csdn.net/20161128165730366)
