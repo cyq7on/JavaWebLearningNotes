@@ -490,7 +490,7 @@ WHERE e.deptno=d.deptno AND e.empno=7788
 
 ```sql
 /*查询7369员工编号、姓名、经理编号和经理姓名*/
-select e1.empno,e1.ename,e2.mgr,e2.ename from emp e1,empe2 where e1.empno=7369 and e1.mgr=e2.empno;
+select e1.empno,e1.ename,e2.mgr,e2.ename from emp e1,emp e2 where e1.empno=7369 and e1.mgr=e2.empno;
 ```
 ###Have a try：
 查询各个部门薪水最高的员工所有信息
