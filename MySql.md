@@ -412,3 +412,95 @@ select * from student stu left join score sco on stu.id=sco.stuid;
 select * from student stu right join score sco on stu.id=sco.stuid;
 ```
 ![右连接](http://img.blog.csdn.net/20161128165730366)
+###2.3、自然连接
+上述的连接查询都会出现多余的结果，更加准备的说法称之为无用的笛卡尔积，需要通过主外键关系来去除。而自然连接则不需要这个关系，它会自动找到这一关系。  
+条件：两张连接的表中存在名称和类型完全一致的列。
+
+```sql
+/*以下是不能查询成功的*/
+select * from student natural join score;
+select * from student natural left join score;
+select * from student natural right join score;
+/*执行以下语句，将列名统一为stuid之后再
+执行上述语句就可以查询到先要的结果了*/
+ALTER TABLE score DROP FOREIGN KEY fk_student_score_stuid;
+ALTER TABLE student CHANGE id stuid INT;
+ALTER TABLE score ADD CONSTRAINT fk_student_score_stuid FOREIGN KEY(stuid) REFERENCES student(stuid);
+```
+###2.4、子查询
+子查询就是嵌套查询，即SELECT中包含SELECT，如果一条语句中存在两个，或两个以上SELECT，那么就是子查询语句了。  
+创建职员表和部门表：  
+
+```sql
+CREATE TABLE emp(
+	empno		INT,
+	ename		VARCHAR(50),
+	job		VARCHAR(50),
+	mgr		INT,
+	hiredate	DATE,
+	sal		DECIMAL(7,2),
+	comm		DECIMAL(7,2),
+	deptno		INT
+) ;
+INSERT INTO emp VALUES(7369,'SMITH','CLERK',7902,'1980-12-17',800,NULL,20);
+INSERT INTO emp VALUES(7499,'ALLEN','SALESMAN',7698,'1981-02-20',1600,300,30);
+INSERT INTO emp VALUES(7521,'WARD','SALESMAN',7698,'1981-02-22',1250,500,30);
+INSERT INTO emp VALUES(7566,'JONES','MANAGER',7839,'1981-04-02',2975,NULL,20);
+INSERT INTO emp VALUES(7654,'MARTIN','SALESMAN',7698,'1981-09-28',1250,1400,30);
+INSERT INTO emp VALUES(7698,'BLAKE','MANAGER',7839,'1981-05-01',2850,NULL,30);
+INSERT INTO emp VALUES(7782,'CLARK','MANAGER',7839,'1981-06-09',2450,NULL,10);
+INSERT INTO emp VALUES(7788,'SCOTT','ANALYST',7566,'1987-04-19',3000,NULL,20);
+INSERT INTO emp VALUES(7839,'KING','PRESIDENT',NULL,'1981-11-17',5000,NULL,10);
+INSERT INTO emp VALUES(7844,'TURNER','SALESMAN',7698,'1981-09-08',1500,0,30);
+INSERT INTO emp VALUES(7876,'ADAMS','CLERK',7788,'1987-05-23',1100,NULL,20);
+INSERT INTO emp VALUES(7900,'JAMES','CLERK',7698,'1981-12-03',950,NULL,30);
+INSERT INTO emp VALUES(7902,'FORD','ANALYST',7566,'1981-12-03',3000,NULL,20);
+INSERT INTO emp VALUES(7934,'MILLER','CLERK',7782,'1982-01-23',1300,NULL,10);
+CREATE TABLE dept(
+	deptno		INT,
+	dname		VARCHAR(14),
+	loc		VARCHAR(13)
+);
+INSERT INTO dept VALUES(10, 'ACCOUNTING', 'NEW YORK');
+INSERT INTO dept VALUES(20, 'RESEARCH', 'DALLAS');
+INSERT INTO dept VALUES(30, 'SALES', 'CHICAGO');
+INSERT INTO dept VALUES(40, 'OPERATIONS', 'BOSTON');
+```
+开始子查询：  
+
+```sql
+/*查询工资高于JONES的员工*/
+select * from emp where sal > (select sal from emp where ename='JONES');
+/*查询工资高于30号部门所有人的员工信息*/
+SELECT * FROM emp WHERE sal > (SELECT MAX(sal) FROM emp WHERE deptno=30);
+SELECT * FROM emp WHERE sal > ALL (SELECT sal FROM emp WHERE deptno=30)
+/*查询工作和工资与MARTIN（马丁）完全相同的员工信息*/
+select * from emp where (job,sal) in (select job,sal from emp where ename='MARTIN');
+/*查询有2个以上直接下属的员工信息*/
+SELECT * FROM emp WHERE empno IN (SELECT mgr FROM emp GROUP BY mgr HAVING COUNT(mgr)>2);
+/*查询员工编号为7788的员工名称、员工工资、部门名称、部门地址*/
+select e.ename,e.sal,d.dname,d.loc from emp e,dept d where e.deptno=d.deptno and e.empno=7788;
+SELECT e.ename, e.sal, d.dname, d.loc 
+FROM emp e, (SELECT dname,loc,deptno FROM dept) d 
+WHERE e.deptno=d.deptno AND e.empno=7788
+```
+###2.5、自连接
+自己连接自己，起别名。  
+
+```sql
+/*查询7369员工编号、姓名、经理编号和经理姓名*/
+select e1.empno,e1.ename,e2.mgr,e2.ename from emp e1,empe2 where e1.empno=7369 and e1.mgr=e2.empno;
+```
+###Have a try：
+查询各个部门薪水最高的员工所有信息
+
+```sql
+INSERT INTO emp VALUES(7782,'test','MANAGER',7839,'1981-06-09',3000,NULL,10);
+/*错误的查询方式*/
+select * from emp where sal in (select max(sal)from emp group by deptno);
+/*正解*/
+select e.* from emp e,(select max(sal) max,deptno from emp group by deptno)m where e.deptno=m.deptno and e.sal=m.max;
+```
+![错误](http://img.blog.csdn.net/20161129113718149)
+
+![正解](http://img.blog.csdn.net/20161129115017423)
