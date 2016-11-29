@@ -340,6 +340,7 @@ alter table score drop foreign key fk_student_score_stuid;
  - 多对多，比如老师和学生
  
  ![关系](http://img.blog.csdn.net/20161128160253420)
+   
 #四、多表查询
 种类：
 
@@ -351,6 +352,7 @@ alter table score drop foreign key fk_student_score_stuid;
           - 右外连接：right [outer] join
           - 全连接：full join（MySQL不支持）
  - 子查询 
+   
 ##1、合并结果集
 作用：把两个select语句的查询结果合并到一起。  
 方式：
