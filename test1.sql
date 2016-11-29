@@ -141,3 +141,66 @@ SELECT * FROM student stu JOIN score sco ON stu.id=sco.stuid;
 INSERT INTO student VALUES(4,'花千骨',DEFAULT);
 SELECT * FROM student stu LEFT JOIN score sco ON stu.id=sco.stuid;
 SELECT * FROM student stu RIGHT JOIN score sco ON stu.id=sco.stuid;
+SELECT * FROM student NATURAL JOIN score;
+SELECT * FROM student NATURAL LEFT JOIN score;
+SELECT * FROM student NATURAL RIGHT JOIN score;
+ALTER TABLE score DROP FOREIGN KEY fk_student_score_stuid;
+ALTER TABLE student CHANGE id stuid INT;
+ALTER TABLE score ADD CONSTRAINT fk_student_score_stuid FOREIGN KEY(stuid) REFERENCES student(stuid);
+CREATE TABLE emp(
+	empno		INT,
+	ename		VARCHAR(50),
+	job		VARCHAR(50),
+	mgr		INT,
+	hiredate	DATE,
+	sal		DECIMAL(7,2),
+	comm		DECIMAL(7,2),
+	deptno		INT
+) ;
+INSERT INTO emp VALUES(7369,'SMITH','CLERK',7902,'1980-12-17',800,NULL,20);
+INSERT INTO emp VALUES(7499,'ALLEN','SALESMAN',7698,'1981-02-20',1600,300,30);
+INSERT INTO emp VALUES(7521,'WARD','SALESMAN',7698,'1981-02-22',1250,500,30);
+INSERT INTO emp VALUES(7566,'JONES','MANAGER',7839,'1981-04-02',2975,NULL,20);
+INSERT INTO emp VALUES(7654,'MARTIN','SALESMAN',7698,'1981-09-28',1250,1400,30);
+INSERT INTO emp VALUES(7698,'BLAKE','MANAGER',7839,'1981-05-01',2850,NULL,30);
+INSERT INTO emp VALUES(7782,'CLARK','MANAGER',7839,'1981-06-09',2450,NULL,10);
+INSERT INTO emp VALUES(7788,'SCOTT','ANALYST',7566,'1987-04-19',3000,NULL,20);
+INSERT INTO emp VALUES(7839,'KING','PRESIDENT',NULL,'1981-11-17',5000,NULL,10);
+INSERT INTO emp VALUES(7844,'TURNER','SALESMAN',7698,'1981-09-08',1500,0,30);
+INSERT INTO emp VALUES(7876,'ADAMS','CLERK',7788,'1987-05-23',1100,NULL,20);
+INSERT INTO emp VALUES(7900,'JAMES','CLERK',7698,'1981-12-03',950,NULL,30);
+INSERT INTO emp VALUES(7902,'FORD','ANALYST',7566,'1981-12-03',3000,NULL,20);
+INSERT INTO emp VALUES(7934,'MILLER','CLERK',7782,'1982-01-23',1300,NULL,10);
+CREATE TABLE dept(
+	deptno		INT,
+	dname		VARCHAR(14),
+	loc		VARCHAR(13)
+);
+INSERT INTO dept VALUES(10, 'ACCOUNTING', 'NEW YORK');
+INSERT INTO dept VALUES(20, 'RESEARCH', 'DALLAS');
+INSERT INTO dept VALUES(30, 'SALES', 'CHICAGO');
+INSERT INTO dept VALUES(40, 'OPERATIONS', 'BOSTON');
+/*工资高于JONES的员工*/
+SELECT * FROM emp WHERE sal > (SELECT sal FROM emp WHERE ename='JONES');
+/*工资高于30号部门所有人的员工信息*/
+SELECT * FROM emp WHERE sal > (SELECT MAX(sal) FROM emp WHERE deptno=30);
+SELECT * FROM emp WHERE sal > ALL (SELECT sal FROM emp WHERE deptno=30)
+/*查询工作和工资与MARTIN（马丁）完全相同的员工信息*/
+SELECT * FROM emp WHERE (job,sal) IN (SELECT job,sal FROM emp WHERE ename='MARTIN');
+/*查询有2个以上直接下属的员工信息*/
+SELECT * FROM emp WHERE empno IN (SELECT mgr FROM emp GROUP BY mgr HAVING COUNT(mgr)>2);
+/*查询员工编号为7788的员工名称、员工工资、部门名称、部门地址*/
+SELECT e.ename,e.sal,d.dname,d.loc FROM emp e,dept d WHERE e.deptno=d.deptno AND e.empno=7788;
+SELECT e.ename, e.sal, d.dname, d.loc 
+FROM emp e, (SELECT dname,loc,deptno FROM dept) d 
+WHERE e.deptno=d.deptno AND e.empno=7788
+SELECT * FROM emp WHERE empno=7369;
+SELECT e1.empno,e1.ename,e2.mgr,e2.ename FROM emp e1,emp e2 WHERE e1.empno=7369 AND e1.mgr=e2.empno;
+/*查询各个部门薪水最高的员工所有信息*/
+INSERT INTO emp VALUES(7782,'test','MANAGER',7839,'1981-06-09',3000,NULL,10);
+/*有问题的查询方式*/
+SELECT * FROM emp WHERE sal IN (SELECT MAX(sal)FROM emp GROUP BY deptno);
+/*正解*/
+	SELECT * FROM emp e,
+
+SELECT e.* FROM emp e,(SELECT MAX(sal) MAX,deptno FROM emp GROUP BY deptno)m WHERE e.deptno=m.deptno AND e.sal=m.max;
