@@ -69,7 +69,6 @@ truncate table user
 DELETE：  
     删除表中的数据，表结构还在  
     删除后的数据可以找回  
-
 TRUNCATE：  
     把表直接DROP掉，然后再创建一个同样的新表  
     删除的数据不能找回  
