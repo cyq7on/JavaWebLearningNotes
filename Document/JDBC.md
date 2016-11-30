@@ -26,7 +26,7 @@ JDBC规范：
 		ResultSet resultSet = null;
 		try {
 			DriverManager.registerDriver(new Driver());
-			connection = DriverManager.getConnection(url, "root", "amm");
+			connection = DriverManager.getConnection(url, "root", "root");
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -100,9 +100,9 @@ Class.forName("com.mysql.jdbc.Driver");
 
 ```
 DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "root");
-Properties info = new Properties();//要参考数据库文档
-		info.setProperty("user", "root");
-		info.setProperty("password","root");
+Properties info = new Properties();
+info.setProperty("user", "root");
+info.setProperty("password","root");
 DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb",info);
 DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?user=root&password=root");
 ```
