@@ -201,6 +201,4 @@ INSERT INTO emp VALUES(7782,'test','MANAGER',7839,'1981-06-09',3000,NULL,10);
 /*有问题的查询方式*/
 SELECT * FROM emp WHERE sal IN (SELECT MAX(sal)FROM emp GROUP BY deptno);
 /*正解*/
-	SELECT * FROM emp e,
-
 SELECT e.* FROM emp e,(SELECT MAX(sal) MAX,deptno FROM emp GROUP BY deptno)m WHERE e.deptno=m.deptno AND e.sal=m.max;

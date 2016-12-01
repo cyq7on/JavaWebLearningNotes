@@ -152,3 +152,26 @@ Java的数据类型与数据库中的类型的关系：
 | double    | double  
 | String    | char,varchar  
 | Date    | date  
+#四、sql注入
+sql注入是指通过特殊的输入语句，让应用运行输入者想要执行的sql语句。  
+比如一个登录的sql，可能如下：
+
+```
+select * from user where name='root' and password='root'
+```
+name和password都是用户输入的，常见的有如下注入方式：
+
+ - 知道存在的用户名，name输入`root' --`，这样就把之后的条件都屏蔽了
+ - 用户名随意输入，password输入`anything' OR 'x'='x`，这样条件永远成立
+ 
+ 解决方法：
+ 弃用Statement，改为其子类PreparedStatement，另一方面，其效率也更高。  
+ 核心代码：
+```
+Class.forName("com.mysql.jdbc.Driver");
+connection = DriverManager.getConnection(url, "root", "amm");
+statement = connection.prepareStatement(sql);
+statement.setString(1, "白子画");
+resultSet = statement.executeQuery();
+```
+当然，关于防止sql注入远远不止更换一个类这么单一，这里仅仅是抛砖引玉啦。
