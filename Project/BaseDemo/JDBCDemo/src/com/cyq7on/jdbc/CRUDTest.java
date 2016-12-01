@@ -1,4 +1,4 @@
-package com.cyq7on.base;
+package com.cyq7on.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
