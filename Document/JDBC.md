@@ -164,9 +164,9 @@ name和password都是用户输入的，常见的有如下注入方式：
  - 知道存在的用户名，name输入`root' --`，这样就把之后的条件都屏蔽了
  - 用户名随意输入，password输入`anything' OR 'x'='x`，这样条件永远成立
  
- 解决方法：
- 弃用Statement，改为其子类PreparedStatement，另一方面，其效率也更高。  
- 核心代码：
+解决方法：  
+弃用Statement，改为其子类PreparedStatement，另一方面，其效率也更高。  
+核心代码：
 ```
 Class.forName("com.mysql.jdbc.Driver");
 connection = DriverManager.getConnection(url, "root", "amm");
