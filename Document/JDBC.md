@@ -174,5 +174,5 @@ statement = connection.prepareStatement(sql);
 statement.setString(1, "白子画");
 resultSet = statement.executeQuery();
 ```
-当然，关于防止sql注入远远不止更换一个类这么单一，这里仅仅是抛砖引玉啦。
+当然，关于防止sql注入远远不止更换一个类这么单一，这里仅仅是抛砖引玉啦。  
 [源码](https://github.com/cyq7on/JavaWebLearningNotes/tree/master/Project/BaseDemo/JDBCDemo)
