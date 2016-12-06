@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<context-param>
+		<param-name>context_key</param-name>
+		<param-value>context_value</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>ServletDemo</servlet-name>
+		<servlet-class>com.cyq7on.servlet.ServletDemo</servlet-class>
+		<init-param>
+			<param-name>key</param-name>
+			<param-value>value</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ServletDemo</servlet-name>
+		<url-pattern>/ServletDemo</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ServletDemo2</servlet-name>
+		<servlet-class>com.cyq7on.servlet.ServletDemo2</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ServletDemo2</servlet-name>
+		<url-pattern>/ServletDemo2</url-pattern>
+	</servlet-mapping>
+</web-app>
