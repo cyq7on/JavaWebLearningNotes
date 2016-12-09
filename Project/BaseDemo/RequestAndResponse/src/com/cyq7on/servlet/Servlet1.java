@@ -4,6 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,23 +38,17 @@ public class Servlet1 extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		byte[] b = new byte[1024];
 		int len = 0;
-		int offset = 0;
-	    int numRead = 0;
-	    while (numRead >= 0) {
-	      numRead = inputStream.read(b, offset, b.length - offset);
-	      offset += numRead;
-	      String info = new String(b);
-	      writer.write(info);
-	      System.out.println(info);
-	    }
 
-//		while((len = inputStream.readLine(b, 0, len))!= -1) {
-////			writer.write(new String(b));
-//			System.out.println(new String(b));
-//		}
-//		while(inputStream.read(b) != -1) {
-//			writer.write(new String(b));
-//		}
+		while((len = inputStream.readLine(b, 0, b.length))!= -1) {
+			String info = URLDecoder.decode(new String(b,0,len),"UTF-8");
+			writer.write(info);
+			System.out.println(info);
+		}
+		/*while((len = inputStream.read(b))!= -1) {
+			String info = new String(b,0,len);
+			writer.write(info);
+			System.out.println(info);
+		}*/
 		writer.close();
 		inputStream.close();
 	}
