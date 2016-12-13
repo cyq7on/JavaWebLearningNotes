@@ -59,7 +59,8 @@ VALUES(1,'周杰伦','m','1978-5-12','2016-11-22','actor','100000.00','Music Kin
 INSERT INTO USER VALUES
 (2,'周杰伦2','m','1978-5-12','2016-11-22','actor','100000.00','Music King'),
 (3,'周杰伦3','m','1978-5-12','2016-11-22','actor','100000.00','Music King')
-update user set job='actor&singer'
+update user set job='singer'
+update user set job='actor&singer',gender='1978-1-18'
 update user set job='singer' where id=2
 update user set Salary=Salary * 9 where id=3
 delete from user where username='周杰伦'
